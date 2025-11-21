@@ -1,21 +1,55 @@
-import React from 'react'
+import React from "react";
+import { motion } from "framer-motion";
 
-const FeaturedBanner = ({ movie }) => {
-  if (!movie) return null
+export default function FeaturedBanner({ movie }) {
+  if (!movie) return null;
+
+  const bannerImg = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+    : movie.poster_path
+    ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
+    : "/placeholder.png";
 
   return (
-    <div
-      className="relative h-96 md:h-[500px] w-full bg-cover bg-center rounded-lg overflow-hidden"
-      style={{
-        backgroundImage: `url(${movie.Poster})`,
-      }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="relative w-full h-[60vh] sm:h-[70vh] rounded-3xl overflow-hidden mt-6 mb-10"
     >
-      <div className="absolute inset-0 bg-black/60 flex flex-col justify-end p-6">
-        <h1 className="text-3xl md:text-5xl font-bold text-white">{movie.Title}</h1>
-        <p className="text-white mt-2 hidden md:block">{movie.Plot}</p>
+      {/* Background Image */}
+      <img
+        src={bannerImg}
+        alt={movie.title}
+        className="w-full h-full object-cover"
+      />
+
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+
+      {/* Content */}
+      <div className="absolute bottom-10 left-10 max-w-2xl">
+        <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight">
+          {movie.title}
+        </h1>
+
+        <p className="mt-4 text-white/80 text-sm sm:text-base line-clamp-3 max-w-xl">
+          {movie.overview}
+        </p>
+
+        <button
+          className="
+            mt-6 px-6 py-3 rounded-xl 
+            bg-white text-black font-medium 
+            text-sm sm:text-base 
+            hover:bg-white/90 transition
+            shadow-lg
+          "
+        >
+          Watch Now
+        </button>
       </div>
-    </div>
-  )
+    </motion.div>
+  );
 }
 
-export default FeaturedBanner

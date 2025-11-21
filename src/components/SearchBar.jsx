@@ -1,52 +1,50 @@
-import { useState } from "react";
+import React from "react";
+import { Search, X } from "lucide-react";
 
-const API_KEY = "9430d8abce320d89568c56813102ec1d";
-
-export default function SearchBar({ setMovies, setError }) {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const searchTMDB = async (query) => {
-    if (!query) return [];
-    try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=en-US&query=${query}&page=1&include_adult=false`
-      );
-      const data = await res.json();
-      return data.results || [];
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
-  };
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    const results = await searchTMDB(searchTerm);
-    if (results.length === 0) {
-      setMovies([]);
-      setError("No results found.");
-    } else {
-      setMovies(results);
-      setError(null);
-    }
-  };
-
+export default function SearchBar({ value, onChange, onClear }) {
   return (
-    <form onSubmit={handleSearch} className="flex gap-2">
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search movies or series..."
-        className="px-4 py-2 border rounded flex-grow text-black"
-      />
-      <button
-        type="submit"
-        className="px-4 py-2 bg-purple-700 rounded hover:bg-purple-800 transition"
-      >
-        Search
-      </button>
-    </form>
+    <div className="w-full flex justify-center mt-6 mb-10 px-4">
+      <div className="relative w-full max-w-xl">
+        {/* Search Icon */}
+        <Search
+          size={20}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"
+        />
+
+        {/* Input */}
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Search movies..."
+          className="
+            w-full py-3 pl-12 pr-12
+            bg-white/10 
+            text-white
+            rounded-2xl 
+            backdrop-blur 
+            outline-none 
+            placeholder:text-white/50
+            transition 
+            focus:ring-2 
+            focus:ring-white/30 
+            focus:bg-white/15
+          "
+        />
+
+        {/* Clear Button */}
+        {value && (
+          <button
+            onClick={onClear}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
+          >
+            <X size={18} />
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
+
+
 
